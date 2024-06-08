@@ -1,8 +1,10 @@
-import { Add, Remove } from "@mui/icons-material";
+import { Add, Margin, Remove } from "@mui/icons-material";
 import styled from "styled-components";
+import mobile from "../responsive";
 
 const Wrapper = styled.div`
   padding: 20px;
+  ${mobile({ padding: "10px" })}
 `;
 
 const Title = styled.h1`
@@ -15,9 +17,12 @@ const Top = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 20px;
+  ${mobile({ padding: "20px 0" })}
 `;
 
-const TopTexts = styled.div``;
+const TopTexts = styled.div`
+  ${mobile({ display: "none" })}
+`;
 
 const TopText = styled.span`
   text-decoration: underline;
@@ -34,11 +39,13 @@ const TopButton = styled.button`
   border: ${({ $type }) => $type === "filled" && "none"};
   color: ${({ $type }) => $type === "filled" && "white"};
   cursor: pointer;
+  ${mobile({ flex: "1", margin: "0 5px" })}
 `;
 
 const Bottom = styled.div`
   display: flex;
   justify-content: space-between;
+  ${mobile({ flexDirection: "column" })}
 `;
 
 const Info = styled.div`
@@ -48,6 +55,7 @@ const Info = styled.div`
 const Product = styled.div`
   display: flex;
   justify-content: space-between;
+  ${mobile({ flexDirection: "column" })}
 `;
 
 const ProductDetails = styled.div`
@@ -96,11 +104,13 @@ const ProductQuantityContainer = styled.div`
 const ProductQuantity = styled.div`
   font-size: 24px;
   margin: 5px;
+  ${mobile({ margin: "5px 15px" })}
 `;
 
 const ProductPrice = styled.div`
   font-size: 30px;
   font-weight: 500;
+  ${mobile({ marginBottom: "20px" })}
 `;
 
 const Hr = styled.hr`
