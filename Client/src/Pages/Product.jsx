@@ -1,7 +1,10 @@
 import styled from "styled-components";
 import Newsletter from "../Components/Newsletter";
-import { Add, Padding, Remove } from "@mui/icons-material";
+import { Add, Remove } from "@mui/icons-material";
 import mobile from "../responsive";
+import { useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { publicRequest } from "../requestMethods";
 
 const Container = styled.div``;
 
@@ -113,45 +116,72 @@ const Button = styled.button`
 `;
 
 const Product = () => {
+  const [productData, setProductData] = useState({});
+  const [userChoice, setUserChoice] = useState({
+    color: "",
+    quantity: 1,
+    size: "",
+  });
+  const productId = useLocation().pathname.split("/")[2];
+
+  useEffect(() => {
+    const getProductData = async () => {
+      const res = await publicRequest.get(`products/find/${productId}`);
+      setProductData(res.data);
+    };
+    getProductData();
+  }, [productId]);
+
+  const handleQuantity = (type) => {
+    type === "-"
+      ? userChoice.quantity > 1
+        ? setUserChoice((prev) => ({ ...prev, quantity: prev.quantity - 1 }))
+        : ""
+      : setUserChoice((prev) => ({ ...prev, quantity: prev.quantity + 1 }));
+  };
+
+  const handleColorSize = (property, value) => {
+    setUserChoice((prev) => ({ ...prev, [property]: value }));
+  };
+  console.log("userchoice = ", userChoice);
+
   return (
     <Container>
       <Wrapper>
         <ImgContainer>
-          <Image src="https://i.ibb.co/S6qMxwr/jean.jpg" />
+          <Image src={productData.img} />
         </ImgContainer>
         <InfoContainer>
-          <Title>Denim Jumpsuit</Title>
-          <Desc>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsam,
-            saepe quos distinctio cumque doloribus voluptate et autem dolorum
-            officiis eaque unde culpa facere accusamus consequuntur accusantium
-            nam amet itaque ea.
-          </Desc>
-          <Price>$ 20</Price>
+          <Title>{productData.title}</Title>
+          <Desc>{productData.desc}</Desc>
+          <Price>$ {productData.price}</Price>
           <FilterContainer>
             <Filter>
               <FilterTitle>Color: </FilterTitle>
-              <FilterColor $color="black" />
-              <FilterColor $color="darkblue" />
-              <FilterColor $color="gray" />
+              {productData?.color?.map((color) => (
+                <FilterColor
+                  key={color}
+                  $color={color}
+                  onClick={() => handleColorSize("color", color)}
+                />
+              ))}
             </Filter>
             <Filter>
               <FilterTitle>Size: </FilterTitle>
-              <FilterSize>
-                <FilterSizeOption>XS</FilterSizeOption>
-                <FilterSizeOption>S</FilterSizeOption>
-                <FilterSizeOption>M</FilterSizeOption>
-                <FilterSizeOption>L</FilterSizeOption>
-                <FilterSizeOption>XL</FilterSizeOption>
-                <FilterSizeOption>XXL</FilterSizeOption>
+              <FilterSize
+                onChange={(e) => handleColorSize("size", e.target.value)}
+              >
+                {productData?.size?.map((size) => (
+                  <FilterSizeOption key={size}>{size}</FilterSizeOption>
+                ))}
               </FilterSize>
             </Filter>
           </FilterContainer>
           <AddContainer>
             <AmountContainer>
-              <Remove />
-              <Quantity>1</Quantity>
-              <Add />
+              <Remove onClick={() => handleQuantity("-")} />
+              <Quantity>{userChoice.quantity}</Quantity>
+              <Add onClick={() => handleQuantity("+")} />
             </AmountContainer>
             <Button>ADD TO CART</Button>
           </AddContainer>

@@ -4,6 +4,7 @@ import {
   SearchOutlined,
   ShoppingCartOutlined,
 } from "@mui/icons-material";
+import { Link } from "react-router-dom";
 
 const Info = styled.div`
   opacity: 0;
@@ -67,7 +68,7 @@ const Icon = styled.div`
   }
 `;
 
-export default function ProductItem({ img }) {
+export default function ProductItem({ img, _id }) {
   return (
     <Container>
       <Circle />
@@ -77,7 +78,9 @@ export default function ProductItem({ img }) {
           <ShoppingCartOutlined />
         </Icon>
         <Icon>
-          <SearchOutlined />
+          <Link to={`/product/${_id}`}>
+            <SearchOutlined />
+          </Link>
         </Icon>
         <Icon>
           <FavoriteBorderOutlined />
